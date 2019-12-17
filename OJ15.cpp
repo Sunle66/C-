@@ -1,66 +1,40 @@
-//在线OJ15-----牛客
+//二叉树节点的最大距离问题 ---> 牛客
 
-//1.最难的问题
-#include<iostream>
-#include<string>
+#include <iostream>
+#include <string>
+#include <vector>
 
 using namespace std;
+
+long MAX=0;
+long height(vector<vector<long>> &tree, long &node)
+{
+    if (node==0)
+        return 0;
+   
+    long left = height(tree, tree[node][0]);
+    long right = height(tree, tree[node][1]);
+   
+    MAX = (left+right+1)>MAX?(left+right+1):MAX;
+    
+    return 1+max(left,right);
+}
 
 int main(){
-    string s;
-    while(getline(cin,s)){
-        for(int i = 0;i < s.size();i++){
-            if(s[i] >= 'V' && s[i] <= 'Z')
-                cout << s[i] - 21;
-            else
-                cout << s[i] + 5;
-        }
-    }
-    return 0;
-}
-
-
-//2.因子个数
-#include<iostream>
-#include<algorithm>
-#include<string.h>
-#include<stdio.h>
-using namespace std;
-int prime[100005];
-void prime_table()
-{
-    int i,j;
-    for(i=2; i<100005; i++)
-        if(prime[i]==0)
-            for(j=2*i; j<100005; j+=i)
-                prime[j] = 1;
-}
-int main()
-{
-    int n,t=0;
-    int a[20000];
-    prime_table();
-    for(int i=2; i<100005; i++)
-        if(prime[i]==0)
-        {
-            a[t]=i;
-            t++;
-        }
-    while(~scanf("%d",&n))
+    
+    long num,root;
+    cin>>num>>root;
+    long far,lch,rch;
+    vector<vector<long>> tree(500001,{0,0});
+    for (long i=0; i<num; i++)
     {
-        int cnt=0,i=0;
-        while(n!=1)
-        {
-            if(n%a[i]!=0)
-                i++;
-            else if(n%a[i]==0)
-            {
-                while(n%a[i]==0)
-                    n/=a[i];
-                cnt++;
-            }
-        }
-        printf("%d\n",cnt);
-
+        cin>>far>>lch>>rch;
+        tree[far][0]=lch;
+        tree[far][1]=rch;
     }
+    
+    height(tree, root);
+    cout<<MAX;
+    
+    return 0;
 }
